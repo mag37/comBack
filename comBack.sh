@@ -1,5 +1,9 @@
 #!/bin/bash
 
+### Pre-set directories, uncomment and change if wanted:
+# DOCKERS="/home/$USER/dockers/"
+# BACKUPS="/home/$USER/docker-backups/"
+
 ### Colors
 MAIN='\033[0;35m' # purple
 ACCENT='\033[1;32m' # yellow 
@@ -37,9 +41,11 @@ fi
 ### set $1 back to $1 
 shift "$((OPTIND-1))"
 
-### Check if source+destination is set, else set predefined:
-[[ -z "$1" ]] && DOCKERS="/home/$USER/dockers/" || DOCKERS="$1"
-[[ -z "$2" ]] && BACKUPS="/home/$USER/docker-backups/" || BACKUPS="$2"
+### Check if either preset or argument for path is given:
+if [ -z "$1" ] && [ -z "$DOCKERS" ] ; then echo -e "No path set. Exiting.\n\n"; Help ; exit ; fi 
+### Check if source+destination is set, else use predefined:
+[[ -n "$1" ]] && DOCKERS="$1"
+[[ -n "$2" ]] && BACKUPS="$2"
 
 ### Remove trailing slash and add subdir+file bit:
 FILES="$(echo "$DOCKERS" | sed 's:/*$::')/**/docker-compose.y*ml"
